@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1100" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0b0d"/>
+      <stop offset="0.34" stop-color="#171a1f"/>
+      <stop offset="0.54" stop-color="#b8b0a3"/>
+      <stop offset="0.78" stop-color="#f4eee4"/>
+      <stop offset="1" stop-color="#fffdf8"/>
+    </linearGradient>
+    <radialGradient id="light" cx="74%" cy="42%" r="54%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.86"/>
+      <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e50914" stop-opacity="0.28"/>
+      <stop offset="0.58" stop-color="#f35b61" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#e50914" stop-opacity="0.08"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1800" height="1100" fill="url(#wall)"/>
+  <rect width="1800" height="1100" fill="url(#light)"/>
+  <g opacity="0.24" filter="url(#soft)">
+    <path d="M1030 430 C1220 390 1470 420 1760 392" fill="none" stroke="url(#paint)" stroke-width="150" stroke-linecap="round"/>
+    <path d="M1045 570 C1260 532 1510 580 1785 548" fill="none" stroke="url(#paint)" stroke-width="126" stroke-linecap="round"/>
+  </g>
+  <g opacity="0.12" fill="#fff">
+    <rect x="1090" y="165" width="360" height="190" rx="42" transform="rotate(-6 1270 260)"/>
+    <rect x="1280" y="710" width="285" height="150" rx="36" transform="rotate(4 1422 785)"/>
+  </g>
+  <g opacity="0.18" stroke="#ffffff" stroke-width="2">
+    <path d="M0 780 H1800"/>
+    <path d="M300 1100 L1050 640 L1800 1100" fill="none"/>
+    <path d="M660 1100 L1080 640 L1490 1100" fill="none"/>
+  </g>
+</svg>
