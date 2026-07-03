@@ -1,3 +1,10 @@
+// =======================
+// EMAILJS CONFIGURATION
+// =======================
+const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+
 const form = document.querySelector('.quote-form');
 const note = document.querySelector('.form-note');
 const links = [...document.querySelectorAll('.story-link')];
@@ -19,6 +26,41 @@ let height = 0;
 let dpr = 1;
 let activeSpotlightSection = null;
 
+function initEmailJS() {
+  if (!window.emailjs?.init) return;
+  window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
+function showSiteToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'review-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  if (window.gsap) {
+    gsap.to(toast, { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power3.out' });
+    gsap.to(toast, { autoAlpha: 0, y: 12, duration: 0.24, delay: 3.4, ease: 'power2.out', onComplete: () => toast.remove() });
+  } else {
+    toast.style.opacity = '1';
+    window.setTimeout(() => toast.remove(), 3800);
+  }
+}
+
+function sendQuoteRequestEmail(request) {
+  if (!window.emailjs?.send) {
+    return Promise.reject(new Error('EmailJS non disponibile.'));
+  }
+
+  return window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    nome: request.name,
+    cognome: request.surname,
+    telefono: request.phone,
+    email: request.email,
+    servizio_richiesto: request.service || 'Non specificato',
+    messaggio: request.message || 'Nessun messaggio',
+    reply_to: request.email
+  });
+}
+
 function moveStorySpotlight(targetLink) {
   if (!storyNav || !storySpotlight || !targetLink) return;
   const x = targetLink.offsetLeft;
@@ -38,6 +80,7 @@ function illuminateSection(section) {
 }
 
 logoImage.addEventListener('load', () => { logoReady = true; });
+initEmailJS();
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -595,24 +638,29 @@ function drawScene(time) {
 window.addEventListener('load', () => moveStorySpotlight(document.querySelector('.story-link.active')));
 window.addEventListener('resize', () => moveStorySpotlight(document.querySelector('.story-link.active')));
 
-form?.addEventListener('submit', (event) => {
+form?.addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (form.dataset.submitting === 'true') return;
+
   const data = new FormData(form);
   const name = String(data.get('nome') || '').trim();
   const surname = String(data.get('cognome') || '').trim();
-  const phone = String(data.get('telefono') || '').replace(/D/g, '');
+  const phone = String(data.get('telefono') || '').replace(/\D/g, '');
   const email = String(data.get('email') || '').trim();
   const services = data.getAll('servizio').map((item) => String(item).trim()).filter(Boolean);
   const message = String(data.get('messaggio') || '').trim();
   const recipient = 'deflorioandrea22@gmail.com';
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton?.textContent || 'Richiedi preventivo';
 
   note?.classList.remove('is-success', 'is-error');
 
-  if (!name || !surname || phone.length !== 10) {
+  if (!name || !surname || phone.length !== 10 || !form.checkValidity()) {
     if (note) {
       note.textContent = 'Inserisci nome, cognome e un numero di telefono valido da 10 cifre.';
       note.classList.add('is-error');
     }
+    form.reportValidity?.();
     return;
   }
 
@@ -627,24 +675,47 @@ form?.addEventListener('submit', (event) => {
     createdAt: new Date().toISOString()
   };
 
+  form.dataset.submitting = 'true';
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Invio...';
+  }
+
   try {
-    const key = 'deflorio.quoteRequests.v1';
-    const saved = JSON.parse(localStorage.getItem(key) || '[]');
-    const normalizedEmail = email.toLowerCase();
-    const next = saved.filter((item) => String(item.email || '').toLowerCase() !== normalizedEmail);
-    next.push(request);
-    localStorage.setItem(key, JSON.stringify(next));
+    await sendQuoteRequestEmail(request);
+
+    try {
+      const key = 'deflorio.quoteRequests.v1';
+      const saved = JSON.parse(localStorage.getItem(key) || '[]');
+      const normalizedEmail = email.toLowerCase();
+      const next = saved.filter((item) => String(item.email || '').toLowerCase() !== normalizedEmail);
+      next.push(request);
+      localStorage.setItem(key, JSON.stringify(next));
+    } catch (error) {
+      console.warn('Impossibile salvare la richiesta preventivo.', error);
+    }
+
+    if (note) {
+      note.textContent = 'Preventivo inviato';
+      note.classList.add('is-success');
+    }
+    showSiteToast('Preventivo inviato con successo! Ti ricontatteremo il prima possibile.');
+    form.reset();
+    window.deflorioRefreshMultiSelect?.();
   } catch (error) {
-    console.warn('Impossibile salvare la richiesta preventivo.', error);
+    console.warn('Invio EmailJS non riuscito.', error);
+    if (note) {
+      note.textContent = 'Si è verificato un errore durante l\'invio. Riprova tra qualche istante.';
+      note.classList.add('is-error');
+    }
+    showSiteToast('Si è verificato un errore durante l\'invio. Riprova tra qualche istante.');
+  } finally {
+    form.dataset.submitting = 'false';
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
   }
-
-  if (note) {
-    note.textContent = 'Preventivo ricevuto';
-    note.classList.add('is-success');
-  }
-
-  form.reset();
-  window.deflorioRefreshMultiSelect?.();
 });
 
 const observer = new IntersectionObserver((entries) => {
@@ -1807,24 +1878,6 @@ if (canvas && ctx) {
   const reviewRepository = new ReviewRepository();
   const service = new ReviewService({ quoteRepository, reviewRepository });
   const trigger = document.querySelector('.review-trigger');
-  const quoteForm = document.querySelector('.quote-form');
-
-  quoteForm?.addEventListener('submit', () => {
-    const data = new FormData(quoteForm);
-    const name = String(data.get('nome') || '').trim();
-    const surname = String(data.get('cognome') || '').trim();
-    const phone = String(data.get('telefono') || '').replace(/\D/g, '');
-    const email = String(data.get('email') || '').trim();
-    if (!name || !surname || phone.length !== 10 || !email || !quoteForm.checkValidity()) return;
-    quoteRepository.save({
-      name,
-      surname,
-      phone,
-      email,
-      service: data.getAll('servizio').map((item) => String(item).trim()).filter(Boolean).join(', '),
-      message: String(data.get('messaggio') || '').trim()
-    });
-  });
 
   const reviewModal = new ReviewModal({
     service,
