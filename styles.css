@@ -2620,10 +2620,13 @@ video {
   background-image: image-set(url('assets/hero-architectural-showroom.webp') type('image/webp'), url('assets/hero-architectural-showroom.png') type('image/png')) !important;
 }
 
-.studio-section,
 .footer {
   content-visibility: auto;
   contain-intrinsic-size: 900px;
+}
+
+.studio-section {
+  content-visibility: visible;
 }
 
 .hero.section-watch#home,
@@ -2635,7 +2638,7 @@ video {
 }
 
 @media (max-width: 640px) {
-  .studio-section {
+  .footer {
     contain-intrinsic-size: 760px;
   }
 }
