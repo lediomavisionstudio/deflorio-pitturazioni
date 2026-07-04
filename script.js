@@ -1,9 +1,9 @@
 // =======================
 // EMAILJS CONFIGURATION
 // =======================
-const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY = "Nw-nU3eqJzDKBvdug";
+const EMAILJS_SERVICE_ID = "service_eq3oh89";
+const EMAILJS_TEMPLATE_ID = "template_pamfc5q";
 
 const form = document.querySelector('.quote-form');
 const note = document.querySelector('.form-note');
@@ -50,15 +50,36 @@ function sendQuoteRequestEmail(request) {
     return Promise.reject(new Error('EmailJS non disponibile.'));
   }
 
-  return window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    nome: request.name,
-    cognome: request.surname,
-    telefono: request.phone,
+  const params = {
+    name: [request.name, request.surname].filter(Boolean).join(' '),
     email: request.email,
-    servizio_richiesto: request.service || 'Non specificato',
-    messaggio: request.message || 'Nessun messaggio',
-    reply_to: request.email
-  });
+    phone: request.phone,
+    service: request.service || 'Non specificato',
+    message: request.message || 'Nessun messaggio'
+  };
+
+  console.log('Invio EmailJS...');
+  console.log('Dati inviati:', params);
+
+  return window.emailjs
+    .send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+    .then((response) => {
+      console.log('Risposta:', response);
+      return response;
+    });
+}
+
+function formatEmailJSError(error) {
+  if (!error) return 'Errore sconosciuto EmailJS.';
+  if (typeof error === 'string') return error;
+
+  const details = [
+    error.status ? `status: ${error.status}` : '',
+    error.text ? `text: ${error.text}` : '',
+    error.message ? `message: ${error.message}` : ''
+  ].filter(Boolean);
+
+  return details.length ? details.join(' - ') : JSON.stringify(error);
 }
 
 function moveStorySpotlight(targetLink) {
@@ -696,19 +717,20 @@ form?.addEventListener('submit', async (event) => {
     }
 
     if (note) {
-      note.textContent = 'Preventivo inviato';
+      note.textContent = 'Preventivo inviato con successo.';
       note.classList.add('is-success');
     }
-    showSiteToast('Preventivo inviato con successo! Ti ricontatteremo il prima possibile.');
+    showSiteToast('Preventivo inviato con successo.');
     form.reset();
     window.deflorioRefreshMultiSelect?.();
   } catch (error) {
-    console.warn('Invio EmailJS non riuscito.', error);
+    console.error(error);
+    const errorMessage = formatEmailJSError(error);
     if (note) {
-      note.textContent = 'Si è verificato un errore durante l\'invio. Riprova tra qualche istante.';
+      note.textContent = errorMessage;
       note.classList.add('is-error');
     }
-    showSiteToast('Si è verificato un errore durante l\'invio. Riprova tra qualche istante.');
+    showSiteToast(errorMessage);
   } finally {
     form.dataset.submitting = 'false';
     if (submitButton) {
