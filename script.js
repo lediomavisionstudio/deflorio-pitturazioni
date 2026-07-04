@@ -51,11 +51,13 @@ function sendQuoteRequestEmail(request) {
   }
 
   const params = {
-    name: [request.name, request.surname].filter(Boolean).join(' '),
+    name: request.name,
+    surname: request.surname,
     email: request.email,
     phone: request.phone,
     service: request.service || 'Non specificato',
-    message: request.message || 'Nessun messaggio'
+    message: request.message || 'Nessun messaggio',
+    time: request.time || new Date().toLocaleString('it-IT')
   };
 
   console.log('Invio EmailJS...');
@@ -692,6 +694,7 @@ form?.addEventListener('submit', async (event) => {
     email,
     service: services.join(', '),
     message,
+    time: new Date().toLocaleString('it-IT'),
     recipient,
     createdAt: new Date().toISOString()
   };
