@@ -279,6 +279,48 @@
         image: "assets/lavori/lavoro-39.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 39",
         createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-40",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-40.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 40",
+        createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-41",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-41.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 71",
+        createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-42",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-42.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 42",
+        createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-43",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-43.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 43",
+        createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-44",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-44.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 44",
+        createdAt: "2026-07-02T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-45",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-45.jpeg",
+        alt: "Lavoro Deflorio Pitturazioni 45",
+        createdAt: "2026-07-02T00:00:00.000Z"
     }
 ];
   const defaultReviews = [
