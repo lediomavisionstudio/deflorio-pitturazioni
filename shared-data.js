@@ -341,6 +341,12 @@
         const items = JSON.parse(raw);
         const onlyOldDefaults = Array.isArray(items) && items.length <= 4 && items.every((item) => String(item.id || '').startsWith('portfolio-'));
         if (this.key === KEYS.portfolio && onlyOldDefaults) this.write(this.defaults, false);
+        if (this.key === KEYS.portfolio && Array.isArray(items) && !onlyOldDefaults) {
+          const storedIds = new Set(items.map((item) => item.id));
+          const migrationIds = new Set(['lavoro-40', 'lavoro-41', 'lavoro-42', 'lavoro-43', 'lavoro-44', 'lavoro-45']);
+          const missingDefaults = this.defaults.filter((item) => migrationIds.has(item.id) && !storedIds.has(item.id));
+          if (missingDefaults.length) this.write([...items, ...missingDefaults], false);
+        }
       } catch (error) {
         this.write(this.defaults, false);
       }
