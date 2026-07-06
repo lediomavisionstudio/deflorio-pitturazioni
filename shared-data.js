@@ -321,7 +321,7 @@
         image: "assets/lavori/lavoro-45.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 45",
         createdAt: "2026-07-02T00:00:00.000Z"
-    }
+    }   
 ];
   const defaultReviews = [
     { id: 'review-maria-default', name: 'Maria L.', email: 'maria.default@deflorio.local', rating: 5, comment: 'Precisi, ordinati e molto attenti ai dettagli. Hanno trasformato il soggiorno senza lasciarci stress.', createdAt: now },
