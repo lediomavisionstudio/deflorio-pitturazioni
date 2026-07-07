@@ -285,43 +285,57 @@
         category: "Lavori",
         image: "assets/lavori/lavoro-40.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 40",
-        createdAt: "2026-07-02T00:00:00.000Z"
+        createdAt: "2026-07-06T00:00:00.000Z"
     },
     {
         id: "lavoro-41",
         category: "Lavori",
         image: "assets/lavori/lavoro-41.jpeg",
-        alt: "Lavoro Deflorio Pitturazioni 71",
-        createdAt: "2026-07-02T00:00:00.000Z"
+        alt: "Lavoro Deflorio Pitturazioni 41",
+        createdAt: "2026-07-06T00:00:00.000Z"
     },
     {
         id: "lavoro-42",
         category: "Lavori",
         image: "assets/lavori/lavoro-42.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 42",
-        createdAt: "2026-07-02T00:00:00.000Z"
+        createdAt: "2026-07-06T00:00:00.000Z"
     },
     {
         id: "lavoro-43",
         category: "Lavori",
         image: "assets/lavori/lavoro-43.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 43",
-        createdAt: "2026-07-02T00:00:00.000Z"
+        createdAt: "2026-07-06T00:00:00.000Z"
     },
     {
         id: "lavoro-44",
         category: "Lavori",
         image: "assets/lavori/lavoro-44.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 44",
-        createdAt: "2026-07-02T00:00:00.000Z"
+        createdAt: "2026-07-06T00:00:00.000Z"
     },
     {
         id: "lavoro-45",
         category: "Lavori",
         image: "assets/lavori/lavoro-45.jpeg",
         alt: "Lavoro Deflorio Pitturazioni 45",
-        createdAt: "2026-07-02T00:00:00.000Z"
-    }   
+        createdAt: "2026-07-06T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-46",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-46.png",
+        alt: "Lavoro Deflorio Pitturazioni 46",
+        createdAt: "2026-07-07T00:00:00.000Z"
+    },
+    {
+        id: "lavoro-47",
+        category: "Lavori",
+        image: "assets/lavori/lavoro-47.png",
+        alt: "Lavoro Deflorio Pitturazioni 47",
+        createdAt: "2026-07-07T00:00:00.000Z"
+    }
 ];
   const defaultReviews = [
     { id: 'review-maria-default', name: 'Maria L.', email: 'maria.default@deflorio.local', rating: 5, comment: 'Precisi, ordinati e molto attenti ai dettagli. Hanno trasformato il soggiorno senza lasciarci stress.', createdAt: now },
@@ -343,7 +357,7 @@
         if (this.key === KEYS.portfolio && onlyOldDefaults) this.write(this.defaults, false);
         if (this.key === KEYS.portfolio && Array.isArray(items) && !onlyOldDefaults) {
           const storedIds = new Set(items.map((item) => item.id));
-          const migrationIds = new Set(['lavoro-40', 'lavoro-41', 'lavoro-42', 'lavoro-43', 'lavoro-44', 'lavoro-45']);
+          const migrationIds = new Set(['lavoro-40', 'lavoro-41', 'lavoro-42', 'lavoro-43', 'lavoro-44', 'lavoro-45', 'lavoro-46', 'lavoro-47']);
           const missingDefaults = this.defaults.filter((item) => migrationIds.has(item.id) && !storedIds.has(item.id));
           if (missingDefaults.length) this.write([...items, ...missingDefaults], false);
         }
